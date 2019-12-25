@@ -1,78 +1,40 @@
 import React, { Component } from "react";
 
-export default class RegisterScreen extends Component {
+export default class LoginScreen extends Component {
   state = {
     email: "",
     password: "",
-    firstName: "",
-    lastName: "",
-    confirmedPassword: "",
     errorMessage: "",
     loading: false
-  };
-
-  handleFirstNameChange = event => {
-    this.setState({
-      firstName: event.target.value
-    });
-    console.log(this.state.firstName);
-  };
-
-  handleLastNameChange = event => {
-    this.setState({
-      lastName: event.target.value
-    });
-    console.log(this.state.lastName);
   };
 
   handleEmailChange = event => {
     this.setState({
       email: event.target.value
     });
-    console.log(this.state.email);
   };
 
   handlePasswordChange = event => {
     this.setState({
       password: event.target.value
     });
-    console.log(this.state.password);
   };
 
-  handleConfirmedPasswordChange = event => {
-    this.setState({
-      confirmedPassword: event.target.value
-    });
-    console.log(this.state.confirmedPassword);
-  };
-
-  handleMoveToLoginPage = event => {
-    window.location.href = "/login";
+  handleMoveToRegisterPage = event => {
+    window.location.href = "/register";
   };
 
   handleSubmit = event => {
     event.preventDefault();
 
     // validate
-    if (!this.state.firstName) {
-      this.setState({
-        errorMessage: "Please input First Name"
-      });
-    } else if (!this.state.lastName) {
-      this.setState({
-        errorMessage: "Please input Last Name"
-      });
-    } else if (!this.state.email) {
+    if (!this.state.email) {
       this.setState({
         errorMessage: "Please input email"
       });
     } else if (!this.state.password) {
       this.setState({
         errorMessage: "Please input password"
-      });
-    } else if (this.state.confirmedPassword !== this.state.password) {
-      this.setState({
-        errorMessage: "Confirmed password not correct"
       });
     } else {
       this.setState({
@@ -81,16 +43,14 @@ export default class RegisterScreen extends Component {
       });
 
       // fetch
-      fetch("http://localhost:3001/api/auth/register", {
+      fetch("http://localhost:3001/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
           email: this.state.email,
-          firstName: this.state.firstName,
-          password: this.state.password,
-          lastName: this.state.lastName
+          password: this.state.password
         }),
         credentials: "include"
       })
@@ -122,36 +82,12 @@ export default class RegisterScreen extends Component {
       <div>
         <div className="container">
           <form className="register-form" onSubmit={this.handleSubmit}>
-            {this.state.errorMessage ? (
-              <div class="alert alert-danger" role="alert">
-                <p className="text-danger">{this.state.errorMessage}</p>
-              </div>
-            ) : (
-              <div></div>
-            )}
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="First Name"
-                value={this.state.firstName}
-                onChange={this.handleFirstNameChange}
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Last Name"
-                value={this.state.lastName}
-                onChange={this.handleLastNameChange}
-              />
-            </div>
+            <p className="text-danger">{this.state.errorMessage}</p>
             <div className="form-group">
               <input
                 type="email"
                 className="form-control"
-                placeholder="Email"
+                placeholder="Email address"
                 value={this.state.email}
                 onChange={this.handleEmailChange}
               />
@@ -165,22 +101,13 @@ export default class RegisterScreen extends Component {
                 onChange={this.handlePasswordChange}
               />
             </div>
-            <div className="form-group">
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Confirm Password"
-                value={this.state.confirmedPassword}
-                onChange={this.handleConfirmedPasswordChange}
-              />
-            </div>
             {this.state.loading ? (
               <div className="spinner-border" role="status">
                 <span className="sr-only">Loading...</span>
               </div>
             ) : (
               <button type="submit" className="btn btn-primary">
-                Register
+                Log In
               </button>
             )}
             <div
@@ -189,9 +116,9 @@ export default class RegisterScreen extends Component {
                 display: "inline-block",
                 float: "right"
               }}
-              onClick={this.handleMoveToLoginPage}
+              onClick={this.handleMoveToRegisterPage}
             >
-              Already have an account? Sign in
+              Don't have account? Sign in!
             </div>
           </form>
         </div>
