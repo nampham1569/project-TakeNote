@@ -8,7 +8,8 @@ const noteRouter = require("./modules/notes/routes");
 const options = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
-  useCreateIndex: true
+  useCreateIndex: true,
+  useFindAndModify: false
 };
 mongoose
   .connect("mongodb://localhost:27017/takenote-v2", options)
@@ -23,11 +24,21 @@ connection.on("connected", () => {
   // middlewares
   const server = express();
   server.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    // res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    // res.header("Access-Control-Allow-Credentials", "true");
+    // res.header(
+    //   "Access-Control-Allow-Headers",
+    //   "Origin, X-Requested-With, Content-Type, Accept"
+    // );
     res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PATCH, PUT, DELETE, OPTIONS"
+    );
     res.header(
       "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
+      "Origin, Content-Type, X-Auth-Token"
     );
     next();
   });
@@ -66,4 +77,3 @@ connection.on("SIGINT", () => {
     console.log("server connection closed due to process termination");
   });
 });
-

@@ -1,0 +1,12 @@
+.list-all-notes {
+  margin: 0 auto;
+}
+
+#createNote {
+  width: 80%;
+  max-width: 500px;
+  padding: 8px 12px 8px 20px;
+  border: 1px solid #333;
+  border-radius: 20px;
+  margin: 20px 0 30px 0;
+}

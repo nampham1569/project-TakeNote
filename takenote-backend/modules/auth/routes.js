@@ -70,7 +70,9 @@ authRouter.post("/register", async (req, res) => {
       await UsersModel.create(newUser, (err, user) => {
         req.session.currentUser = {
           _id: user._id,
-          email: user.email
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName
         };
         req.session.save();
       });
@@ -79,6 +81,57 @@ authRouter.post("/register", async (req, res) => {
       });
     }
   }
+});
+
+authRouter.post("/login", async (req, res) => {
+  try {
+    // check account
+    const existedEmail = await UsersModel.findOne({
+      email: req.body.email
+    }).lean();
+    if (!existedEmail) {
+      res.status(400).json({
+        success: false,
+        message: "Email didnt exists"
+      });
+    } else {
+      // compare password
+      const comparePasswordResult = bcryptjs.compareSync(
+        req.body.password,
+        existedEmail.password
+      );
+      if (!comparePasswordResult) {
+        res.status(400).json({
+          success: false,
+          message: "Wrong password"
+        });
+      } else {
+        // session storage
+        req.session.currentUser = {
+          _id: existedEmail._id,
+          email: existedEmail.email,
+          firstName: existedEmail.firstName,
+          lastName: existedEmail.lastName
+        };
+
+        res.status(200).json({
+          success: true
+        });
+      }
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+});
+
+authRouter.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.status(200).json({
+    success: true
+  });
 });
 
 module.exports = authRouter;
